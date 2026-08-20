@@ -71,7 +71,7 @@ const MemberSchema = new Schema(
 			default: 0,
 		},
 
-		memberFolllowings: {
+		memberFollowings: {
 			type: Number,
 			default: 0,
 		},

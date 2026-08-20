@@ -18,8 +18,8 @@ export class MemberService {
 			//TODO: Authentication via Token
 			return result;
 		} catch (err) {
-			console.log('Error, serviceModule:', err);
-			throw new BadRequestException(err);
+			console.log('Error, serviceModel:', err);
+			throw new BadRequestException(Messages.USED_NICK_PHONE);
 		}
 	}
 
