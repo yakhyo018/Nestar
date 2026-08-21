@@ -42,7 +42,6 @@ export class MemberService {
 			throw new InternalServerErrorException(Messages.BLOCKED_USER);
 		}
 
-		//TODO: Compare passwords
 		const isMatch = await this.authService.comparePassword(
 			input.memberPassword,
 			response.memberPassword!,
@@ -59,5 +58,13 @@ export class MemberService {
 
 	public async getMember(): Promise<string> {
 		return 'getMember executed';
+	}
+
+	public async getAllMemberByAdmin(): Promise<string> {
+		return 'getAllMemberByAdmin';
+	}
+
+	public async updateMemberByAdmin(): Promise<string> {
+		return 'updateMemberByAdmin';
 	}
 }
