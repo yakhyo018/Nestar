@@ -22,7 +22,6 @@ export class LoggingInterceptor implements NestInterceptor {
 			this.logger.log(`${this.stringify(gqlContext.getContext().req.body)}`, 'REQUEST');
 
 			/* (2) Errors handling via GraphQL */
-
 			/* (3) No Errors, giving Response below */
 			return next.handle().pipe(
 				tap((context) => {
