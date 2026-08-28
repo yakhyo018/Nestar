@@ -20,6 +20,7 @@ import { WithoutGuard } from '../auth/guards/without.guard';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
 import { Messages } from '../../libs/enums/common.enum';
+import path from 'path';
 
 @Resolver()
 export class MemberResolver {
@@ -144,18 +145,22 @@ export class MemberResolver {
 	public async imagesUploader(
 		@Args('files', { type: () => [GraphQLUpload] })
 		files: Promise<FileUpload>[],
-		@Args('target') target: String,
+		@Args('target') target: string,
 	): Promise<string[]> {
 		console.log('Mutation: imagesUploader');
 
 		const uploadedImages: string[] = [];
 		const promisedList = files.map(
-			async (img: Promise<FileUpload>, index: number): Promise<Promise<void>> => {
+			async (img: Promise<FileUpload>, index: number): Promise<void> => {
 				try {
-					const { filename, mimetype, encoding, createReadStream } = await img;
+					const { filename, mimetype, createReadStream } = await img;
+					console.log('>>> MIME:', mimetype, '| FILE:', filename);
 
+					const ext = path.parse(filename).ext.toLowerCase();
+					const validExt = ['.png', '.jpg', '.jpeg'].includes(ext);
 					const validMime = validMimeTypes.includes(mimetype);
-					if (!validMime) throw new Error(Messages.PROVIDE_ALLOWED_FORMAT);
+
+					if (!validMime && !validExt) throw new Error(Messages.PROVIDE_ALLOWED_FORMAT);
 
 					const imageName = getSerialForImage(filename);
 					const url = `uploads/${target}/${imageName}`;
@@ -165,13 +170,13 @@ export class MemberResolver {
 						stream
 							.pipe(createWriteStream(url))
 							.on('finish', () => resolve(true))
-							.on('error', () => reject(false));
+							.on('error', (err) => reject(err));
 					});
 					if (!result) throw new Error(Messages.UPLOAD_FAILED);
 
 					uploadedImages[index] = url;
 				} catch (err) {
-					console.log('Error, file missing!');
+					console.log('UPLOAD ERROR:', err);
 				}
 			},
 		);
