@@ -1,33 +1,33 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { ObjectId } from 'mongoose';
+import { Field, ObjectType } from '@nestjs/graphql';
+import type { ObjectId } from 'mongoose';
 import { CommentGroup, CommentStatus } from '../../enums/comment.enum';
 import { Member, TotalCounter } from '../member/member';
 
 @ObjectType()
 export class Comment {
 	@Field(() => String)
-	_id: ObjectId;
+	_id!: ObjectId;
 
 	@Field(() => CommentStatus)
-	commentStatus: CommentStatus;
+	commentStatus!: CommentStatus;
 
 	@Field(() => CommentGroup)
-	commentGroup: CommentGroup;
+	commentGroup!: CommentGroup;
 
 	@Field(() => String)
-	commentContent: string;
+	commentContent!: string;
 
 	@Field(() => String)
-	commentRefId: ObjectId;
+	commentRefId!: ObjectId;
 
 	@Field(() => String)
-	memberId: ObjectId;
+	memberId!: ObjectId;
 
 	@Field(() => Date)
-	createdAt: Date;
+	createdAt!: Date;
 
 	@Field(() => Date)
-	updatedAt: Date;
+	updatedAt!: Date;
 
 	/** from aggregation **/
 
@@ -38,8 +38,8 @@ export class Comment {
 @ObjectType()
 export class Comments {
 	@Field(() => [Comment])
-	list: Comment[];
+	list!: Comment[];
 
 	@Field(() => [TotalCounter], { nullable: true })
-	metaCounter: TotalCounter[];
+	metaCounter!: TotalCounter[];
 }
