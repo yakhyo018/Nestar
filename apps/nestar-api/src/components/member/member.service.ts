@@ -119,6 +119,16 @@ export class MemberService {
 		return targetMember;
 	}
 
+	private async checkSubscription(
+		followerId: ObjectId,
+		followingId: ObjectId,
+	): Promise<MeFollowed[]> {
+		const result = await this.followModel
+			.findOne({ followingId: followingId, followerId: followerId })
+			.exec();
+		return result ? [{ followerId: followerId, followingId: followingId, myFollowing: true }] : [];
+	}
+
 	public async getAgents(memberId: ObjectId, input: AgentsInquiry): Promise<Members> {
 		const { text } = input.search;
 		const match: T = { memberType: MemberType.AGENT, memberStatus: MemberStatus.ACTIVE };
@@ -202,16 +212,6 @@ export class MemberService {
 			.exec();
 		if (!result) throw new InternalServerErrorException(Messages.UPDATE_FAILED);
 		return result;
-	}
-
-	public async checkSubscription(
-		followerId: ObjectId,
-		followingId: ObjectId,
-	): Promise<MeFollowed[]> {
-		const result = await this.followModel
-			.findOne({ followingId: followingId, followerId: followerId })
-			.exec();
-		return result ? [{ followerId: followerId, followingId: followingId, myFollowing: true }] : [];
 	}
 
 	public async memberStatsEditor(input: StatisticModifier): Promise<Member> {
