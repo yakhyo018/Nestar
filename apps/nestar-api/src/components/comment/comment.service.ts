@@ -10,7 +10,7 @@ import { MemberService } from '../member/member.service';
 import { BoardArticleService } from '../board-article/board-article.service';
 import { CommentUpdate } from '../../libs/dto/comment/comment.update';
 import { T } from '../../libs/types/common';
-import { lookupMember } from '../../libs/config';
+import { lookupAuthMemberLiked, lookupMember } from '../../libs/config';
 
 @Injectable()
 export class CommentService {
@@ -90,7 +90,7 @@ export class CommentService {
 					list: [
 						{ $skip: (input.page - 1) * input.limit },
 						{ $limit: input.limit },
-						// meLiked
+						lookupAuthMemberLiked(memberId),
 						lookupMember,
 						{ $unwind: '$memberData' },
 					],
